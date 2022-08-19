@@ -9,7 +9,10 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
+import os, ssl
 
+if (not os.environ.get('PYTHONHTTPSVERIFY', '') and getattr(ssl, '_create_unverified_context', None)):
+  ssl._create_default_https_context = ssl._create_unverified_context
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -37,9 +40,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'corsheaders',
+    'CloudpossApp.apps.CloudpossAppConfig',
+    
+    
+
 ]
 
+CORS_ORIGIN_ALLOW_ALL = True
+
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -75,8 +87,15 @@ WSGI_APPLICATION = 'CloudpossAPI.wsgi.application'
 
 DATABASES = {
     'default': {
+    
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'djongo',
+       #'NAME': BASE_DIR / 'db.sqlite3',
+        'CLIENT': {
+            "host":"mongodb+srv://<new_user>:<user123>@cluster0.rvvru8b.mongodb.net/?retryWrites=true&w=majority",
+            "name": "testcloudposs",
+            "authMechanism":"SCRAM-SHA-1"
+        }
     }
 }
 
